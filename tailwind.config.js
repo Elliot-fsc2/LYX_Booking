@@ -1,8 +1,4 @@
-import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
-// import flowbite from "flowbite-react/tailwind";
-
-const flowbite = require("flowbite-react/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -11,7 +7,6 @@ export default {
     "./storage/framework/views/*.php",
     "./resources/views/**/*.blade.php",
     "./resources/js/**/*.jsx",
-    flowbite.content(),
   ],
 
   darkMode: "class",
@@ -20,6 +15,11 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
+      },
+
+      height: {
+        hero: "38rem",
+        smhero: "35rem",
       },
 
       colors: {
@@ -34,9 +34,8 @@ export default {
           800: "#ff6f00",
           900: "#ff5f00",
         },
+        hero: "#F2B934",
       },
     },
   },
-
-  plugins: [forms, flowbite.plugin()],
 };

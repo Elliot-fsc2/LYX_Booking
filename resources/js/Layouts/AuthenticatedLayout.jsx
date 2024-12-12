@@ -1,98 +1,120 @@
-// "use client";
+import React, { useState } from "react";
+import { usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import RoomServiceIcon from "@mui/icons-material/RoomService";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 
-import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import { Link, Head, usePage } from "@inertiajs/react";
+const AuthLayout = ({ children }) => {
+  const { auth } = usePage().props;
 
-export default function Component({ children }) {
-  const user = usePage().props.auth.user;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <>
-      <Head title="Test" />
-      <Navbar className="bg-gold-300 top-0 fixed w-screen">
-        <Navbar.Brand href="/">
-          {/* <img
-            src="/favicon.svg"
-            className="mr-3 h-6 sm:h-9"
-            alt="Flowbite React Logo"
-          /> */}
-          <span className="self-center whitespace-nowrap text-xl font-bold dark:text-white">
-            Lyx BeautyLine
-          </span>
-        </Navbar.Brand>
-        <div className="flex md:order-2">
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                rounded
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">
-                {user.first_name.charAt(0).toUpperCase() +
-                  user.first_name.slice(1)}{" "}
-                {user.last_name.charAt(0).toUpperCase() +
-                  user.last_name.slice(1)}
+    <div className="bg-gray-100 h-max">
+      {/* Navbar */}
+      <nav className="bg-hero shadow">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="text-lg font-bold">
+            <a href="/" className="text-gray-800">
+              Lyx Booking
+            </a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <h1 className="text-gray-800 font-bold ">
+              Welcome, {auth.user.first_name}!
+            </h1>
+            <button
+              onClick={toggleSidebar}
+              className="md:hidden p-2 text-gray-800 hover:text-blue-500"
+            >
+              <span className="material-icons">
+                {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
               </span>
-              <span className="block truncate text-sm font-medium">
-                {user.email}
-              </span>
-            </Dropdown.Header>
-            <Dropdown.Item href={route("profile.edit")} as={Link}>
-              Profile
-            </Dropdown.Item>
-            <Dropdown.Item>Settings</Dropdown.Item>
-            <Dropdown.Item>Earnings</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item href={route("logout")} method="post" as={Link}>
-              Sign out
-            </Dropdown.Item>
-          </Dropdown>
-          <Navbar.Toggle />
+            </button>
+          </div>
         </div>
-        <Navbar.Collapse>
-          <Navbar.Link
-            className={
-              route().current("dashboard")
-                ? "text-white text-xl hover:text-black-500 active-link"
-                : "text-black text-xl hover:text-white"
-            }
-            href={route("dashboard")}
-            as={Link}
-          >
-            Home
-          </Navbar.Link>
-          <Navbar.Link
-            className={
-              route().current("services.index")
-                ? "text-white text-xl hover:text-black-500 active-link"
-                : "text-black text-xl hover:bg-white"
-            }
-            href={route("services.index")}
-            as={Link}
-            // active={route().current("services")}
-          >
-            Services
-          </Navbar.Link>
-          <Navbar.Link
-            className={
-              route().current("test")
-                ? "text-white text-xl hover:text-black-500"
-                : "text-black text-xl hover:text-white"
-            }
-            href="#"
-          >
-            My Bookings
-          </Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
+      </nav>
 
-      <main className="mt-24 px-12">{children}</main>
-    </>
+      <div className="flex flex-col md:flex-row">
+        {/* Sidebar */}
+        <aside
+          className={`fixed inset-0 z-30 bg-white shadow-md md:relative md:w-64 md:h-screen transition-transform duration-300 transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
+        >
+          <div className="p-4">
+            {/* Close Button Inside Sidebar */}
+            <button
+              onClick={toggleSidebar}
+              className="mb-4 p-2 text-gray-800 hover:text-blue-500 md:hidden"
+            >
+              <CloseIcon /> {/* Close icon */}
+            </button>
+            <h2 className="text-lg font-bold">Dashboard</h2>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="block p-2 text-gray-800 hover:bg-gray-200 rounded"
+                >
+                  <LocalOfferIcon /> &nbsp; Deals
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="block p-2 text-gray-800 hover:bg-gray-200 rounded"
+                >
+                  <RoomServiceIcon /> &nbsp; Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/users"
+                  className="block p-2 text-gray-800 hover:bg-gray-200 rounded"
+                >
+                  <BookmarksIcon /> &nbsp; My Bookings
+                </Link>
+              </li>
+            </ul>
+            <h2 className="text-lg font-bold mt-10">Account</h2>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href="/profile"
+                  className="block p-2 text-gray-800 hover:bg-gray-200 rounded"
+                >
+                  <AccountCircleIcon /> &nbsp; Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/logout"
+                  method="post"
+                  className="block p-2 text-gray-800 hover:bg-gray-200 rounded"
+                >
+                  <LogoutIcon /> &nbsp; Logout
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1 p-6 ">
+          {children} {/* Render children here */}
+        </main>
+      </div>
+    </div>
   );
-}
+};
+
+export default AuthLayout;

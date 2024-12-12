@@ -10,10 +10,17 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::all();
-        // $hairServices = Service::where('category_id', 1)->get();
-        // dd($services);
         return inertia('Services/Index', [
             'hairServices' => $services
+        ]);
+    }
+
+    public function show($id)
+    {
+        $service = Service::findOrFail($id);
+
+        return inertia('Services/ServiceDetails', [
+            'service' => $service
         ]);
     }
 }
